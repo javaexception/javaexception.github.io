@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="###工厂方法模式的定义 工厂方法模式（FACTORY METHOD）是一种常用的对象创建型设计模式,此模式的核心精神是封装类中不变的部分，提取其中个性化善变的部分为独立类，通过依赖注入以达到解耦、复用和方便后期维护拓展的目的。它的核心结构有四个角色，分别是抽象工厂；具体工厂；抽象产品；具体产品。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式(2)-工厂方法模式详解(易懂)">
+<meta property="og:url" content="http://wanqinlong.com/2018/01/17/设计模式(2)-工厂方法模式详解(易懂)/index.html">
+<meta property="og:site_name" content="秦子帅的博客">
+<meta property="og:description" content="###工厂方法模式的定义 工厂方法模式（FACTORY METHOD）是一种常用的对象创建型设计模式,此模式的核心精神是封装类中不变的部分，提取其中个性化善变的部分为独立类，通过依赖注入以达到解耦、复用和方便后期维护拓展的目的。它的核心结构有四个角色，分别是抽象工厂；具体工厂；抽象产品；具体产品。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-59c0b95861ff0bc2?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-05-31T13:08:51.973Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式(2)-工厂方法模式详解(易懂)">
+<meta name="twitter:description" content="###工厂方法模式的定义 工厂方法模式（FACTORY METHOD）是一种常用的对象创建型设计模式,此模式的核心精神是封装类中不变的部分，提取其中个性化善变的部分为独立类，通过依赖注入以达到解耦、复用和方便后期维护拓展的目的。它的核心结构有四个角色，分别是抽象工厂；具体工厂；抽象产品；具体产品。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2787891-59c0b95861ff0bc2?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wanqinlong.com/2018/01/17/设计模式(2)-工厂方法模式详解(易懂)/"/>
+
+
+
+
+
+  <title>设计模式(2)-工厂方法模式详解(易懂) | 秦子帅的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">秦子帅的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Android Developer | 一直在路上，为梦想奋斗！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home  ��ҳ"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user ����"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wanqinlong.com/2018/01/17/设计模式(2)-工厂方法模式详解(易懂)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="秦子帅">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/aaa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="秦子帅的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">设计模式(2)-工厂方法模式详解(易懂)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-17T22:03:15+08:00">
+                2018-01-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/01/17/设计模式(2)-工厂方法模式详解(易懂)/" class="leancloud_visitors" data-flag-title="设计模式(2)-工厂方法模式详解(易懂)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>###<strong>工厂方法模式的定义</strong></p>
+<p>工厂方法模式（FACTORY METHOD）是一种常用的对象创建型设计模式,此模式的核心精神是封装类中不变的部分，提取其中个性化善变的部分为独立类，通过依赖注入以达到解耦、复用和方便后期维护拓展的目的。它的核心结构有四个角色，分别是抽象工厂；具体工厂；抽象产品；具体产品。<br><a id="more"></a><br><img src="http://upload-images.jianshu.io/upload_images/2787891-59c0b95861ff0bc2?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"><br>从上面的图可以看出：Product为抽象产品类，负责产品的共性；Creator为抽象创建类；而具体的产品(ConcreteProduct)是由实现工厂ConcreteCreator完成的。<br>工厂方法模式详解及举例</p>
+<p><strong>一.首先先用代码解释一下上面的图：</strong></p>
+<p><strong>1.抽象产品类</strong><br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Product</span> &#123;  </div><div class="line">   <span class="comment">//所有产品类的公共业务方法  </span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">method1</span>(<span class="params"></span>) </span>&#123;  </div><div class="line">       <span class="comment">//公共方法的实现  </span></div><div class="line">   &#125;  </div><div class="line"></div><div class="line">   <span class="comment">//声明抽象业务方法  </span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">method2</span>(<span class="params"></span>)</span>;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>2.具体产品类</strong><br><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">ConcreteProduct1</span> <span class="keyword">extends</span> <span class="title">Product</span></span>&#123;  </div><div class="line">   <span class="comment">//实现业务方法  </span></div><div class="line">   public void method2() &#123;  </div><div class="line">       <span class="comment">//业务方法的实现  </span></div><div class="line">   &#125;  </div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">ConcreteProduct2</span> <span class="keyword">extends</span> <span class="title">Product</span></span>&#123;  </div><div class="line">   <span class="comment">//实现业务方法  </span></div><div class="line">   public void method2() &#123;  </div><div class="line">       <span class="comment">//业务方法的实现  </span></div><div class="line">   &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>3.抽象工厂类</strong><br><figure class="highlight fortran"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> Creator&#123;  </div><div class="line"></div><div class="line"> //  <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="built_in">Product</span> createProduct(String arg)；</div><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> &lt;T <span class="keyword">extends</span> <span class="built_in">Product</span>&gt; T createProduct(<span class="keyword">Class</span>&lt;T&gt; c);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>4.具体工厂类</strong><br><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">ConcreteCreator</span> <span class="keyword">extends</span> <span class="title">Creator</span></span>&#123;  </div><div class="line"></div><div class="line">public &lt;<span class="type">T</span> <span class="keyword">extends</span> <span class="type">Product</span>&gt; <span class="type">T</span> createProduct(<span class="class"><span class="keyword">class</span><span class="title">&lt;T&gt;</span> <span class="title">c</span>)</span>&#123;</div><div class="line"><span class="type">Product</span> product=<span class="literal">null</span>;</div><div class="line"><span class="keyword">try</span>&#123;</div><div class="line">      product =(<span class="type">T</span>)<span class="type">Class</span>.forName(c.getName()).newInstance();</div><div class="line">&#125;<span class="keyword">catch</span> (<span class="type">Exception</span> e)&#123;</div><div class="line">   </div><div class="line">&#125;</div><div class="line"><span class="keyword">return</span> (<span class="type">T</span>)product;</div><div class="line">&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>5调用：</strong><br><figure class="highlight fortran"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> Creator creator=new ConcreteCreator();</div><div class="line"> <span class="built_in">Product</span> <span class="built_in">product</span>=creator.createProduct(ConcreteProduct1.<span class="keyword">class</span>);</div><div class="line">// <span class="built_in">product</span>.method2();</div></pre></td></tr></table></figure></p>
+<p>根据上面的代码应该看懂了吧？如果不懂下面我具体举个例子：</p>
+<p><strong>二.举例</strong></p>
+<p>我们拿手机举例，一个手机工厂生产两种手机，分别是华为手机和小米手机。过程就是在工厂经过一系列的加工制作生产出这两种手机，下面用代码来演示一下：</p>
+<p><strong>1.抽象产品类，也就是两种手机的共性：</strong></p>
+<p>定义了两个方法，一个是打电话，一个是手机的品牌，两种手机的品牌是不同的，所以是抽象的。<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Phone</span> &#123;</div><div class="line">   <span class="comment">//两种手机都可以打电话</span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Call</span>(<span class="params"></span>) </span>&#123;</div><div class="line">       <span class="comment">//公共方法的实现</span></div><div class="line">   &#125;</div><div class="line"></div><div class="line">   <span class="comment">//两种手机都有品牌,但是品牌不同，所以是抽象的</span></div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">PhoneBrand</span>(<span class="params"></span>)</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>2.具体的产品类， 就是华为手机和小米手机两个产品</strong><br><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">HUAWEIPhone</span> <span class="keyword">extends</span> <span class="title">Phone</span> </span>&#123;</div><div class="line">   <span class="comment">//品牌</span></div><div class="line">   <span class="meta">@Override</span></div><div class="line">   public void <span class="type">PhoneBrand</span>() &#123;</div><div class="line">       <span class="type">Log</span>.e(<span class="string">"qzs"</span>,<span class="string">"我的品牌是华为"</span>);</div><div class="line">   &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">MIPhone</span> <span class="keyword">extends</span> <span class="title">Phone</span> </span>&#123;</div><div class="line">   <span class="comment">//品牌</span></div><div class="line">   <span class="meta">@Override</span></div><div class="line">   public void <span class="type">PhoneBrand</span>() &#123;</div><div class="line">       <span class="type">Log</span>.e(<span class="string">"qzs"</span>,<span class="string">"我的品牌是小米"</span>);</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>3.抽象工厂类，要想生产手机就必须要有工厂，所以先要定义生产手机的抽象方法。</strong><br><figure class="highlight monkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">PhoneFactory</span>  &#123;</span></div><div class="line">   <span class="keyword">public</span> <span class="keyword">abstract</span> &lt;T extends Phone&gt; T createPhone(<span class="class"><span class="keyword">Class</span>&lt;<span class="title">T</span>&gt; <span class="title">c</span>);</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>4.具体工厂类,具体的生产手机的方法</strong><br><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">ConcretePhoneFactory</span> <span class="keyword">extends</span> <span class="title">PhoneFactory</span> </span>&#123;</div><div class="line"></div><div class="line">   <span class="meta">@Override</span></div><div class="line">   public &lt;<span class="type">T</span> <span class="keyword">extends</span> <span class="type">Phone</span>&gt; <span class="type">T</span> createPhone(<span class="type">Class</span>&lt;<span class="type">T</span>&gt; c) &#123;</div><div class="line">       <span class="type">Phone</span> phone=<span class="literal">null</span>;</div><div class="line">       <span class="keyword">try</span>&#123;</div><div class="line">           phone =(<span class="type">Phone</span>)<span class="type">Class</span>.forName(c.getName()).newInstance();</div><div class="line">           <span class="type">Log</span>.e(<span class="string">"qzs"</span>,<span class="string">"生产了一个手机"</span>);</div><div class="line">           phone.<span class="type">PhoneBrand</span>();</div><div class="line">       &#125;<span class="keyword">catch</span> (<span class="type">Exception</span> e)&#123;</div><div class="line"></div><div class="line">       &#125;</div><div class="line">       <span class="keyword">return</span> (<span class="type">T</span>) phone;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>调用：</strong><br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">PhoneFactory phoneFactory</span>=new ConcretePhoneFactory();</div><div class="line"><span class="attribute">Phone huaiweiphone</span>=phoneFactory.createPhone(HUAWEIPhone.class);</div><div class="line"><span class="attribute">Phone miphone</span>=phoneFactory.createPhone(MIPhone.class);</div></pre></td></tr></table></figure></p>
+<p>运行的结果如下，可以看到生产了两种手机，这次工厂方法模式是不是有了更为清楚的认识。</p>
+<p>###工厂方法模式不同形式</p>
+<p><strong>1.简单工厂模式</strong></p>
+<p>就是把抽象工厂类去掉，具体工厂类的方法上加上static，拿上面的例子说明：<br><figure class="highlight monkey"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcretePhoneFactory</span> &#123;</span></div><div class="line"></div><div class="line">   <span class="keyword">public</span>  static &lt;T extends Phone&gt; T createPhone(<span class="class"><span class="keyword">Class</span>&lt;<span class="title">T</span>&gt; <span class="title">c</span>) &#123;</span></div><div class="line">       Phone phone=<span class="literal">null</span>;</div><div class="line">       <span class="keyword">try</span>&#123;</div><div class="line">           phone =(Phone)<span class="class"><span class="keyword">Class</span>.<span class="title">forName</span>(<span class="title">c</span>.<span class="title">getName</span>()).<span class="title">newInstance</span>();</span></div><div class="line">           <span class="built_in">Log</span>.e(<span class="string">"qzs"</span>,<span class="string">"生产了一个手机"</span>);</div><div class="line">           phone.PhoneBrand();</div><div class="line">       &#125;<span class="keyword">catch</span> (Exception e)&#123;</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">return</span> (T) phone;</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>2.多工厂方法模式</strong></p>
+<p>从名字就可以看出来，是有多个具体工厂类，上面的例子是两种手机都放在了一个工厂了，现实的话应该在两个工厂生产，也就是多工厂方法模式。</p>
+<p>分成两个工厂后，抽象工厂类就不用传参了，因为每种手机都有自己工厂了。</p>
+<p>修改后的抽象工厂类：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">PhoneFactory</span>  &#123;</div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span>  Phone <span class="title">createPhone</span>(<span class="params"></span>)</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>修改的具体工厂类：<br><figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">ConcreteHUAWEIFactory</span> <span class="keyword">extends</span> <span class="title">PhoneFactory</span> </span>&#123;</div><div class="line">   <span class="meta">@Override</span></div><div class="line">   public <span class="type">Phone</span> createPhone() &#123;</div><div class="line">       <span class="type">Log</span>.e(<span class="string">"qzs"</span>,<span class="string">"生产了一个华为手机"</span>);</div><div class="line">       <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">HUAWEIPhone</span>();</div><div class="line">   &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">ConcreteMIFactory</span> <span class="keyword">extends</span> <span class="title">PhoneFactory</span> </span>&#123;</div><div class="line">   <span class="meta">@Override</span></div><div class="line">   public <span class="type">Phone</span> createPhone() &#123;    </div><div class="line">       <span class="type">Log</span>.e(<span class="string">"qzs"</span>,<span class="string">"生产了一个小米手机"</span>);</div><div class="line">       <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">MIPhone</span>();</div><div class="line">   &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>3.工厂方法模式来实现单例模式</strong></p>
+<p>单例模式的核心要求就是在内存中只有一个对象，通过工厂方法模式也可以只在内存中生产一个对象。<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Singleton</span> &#123;  </div><div class="line"> </div><div class="line">   <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span>(<span class="params"></span>) </span>&#123;  </div><div class="line"> </div><div class="line">   &#125;  </div><div class="line"> </div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span>(<span class="params"></span>) </span>&#123;  </div><div class="line">       System.<span class="keyword">out</span>.println(<span class="string">"具体逻辑"</span>);  </div><div class="line">   &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>通过获得类构造器，然后设置访问权限，生成一个对象，然后提供外部访问，保证内存中的对象唯一。<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> SingletonFactory &#123;  </div><div class="line"> </div><div class="line">   <span class="keyword">private</span> <span class="keyword">static</span> Singleton singleton;  </div><div class="line"></div><div class="line">   <span class="keyword">static</span> &#123;  </div><div class="line">       <span class="keyword">try</span> &#123;  </div><div class="line">           Class clazz = Class.forName(Singleton.class.getName());  </div><div class="line">           Constructor <span class="keyword">constructor</span> = clazz.getDeclaredConstructor(<span class="params"></span>);  </div><div class="line">           <span class="keyword">constructor</span>.setAccessible(<span class="params"><span class="literal">true</span></span>);  </div><div class="line">           singleton = (<span class="params">Singleton</span>) <span class="keyword">constructor</span>.newInstance(<span class="params"></span>);  </div><div class="line">       &#125; catch (<span class="params">Exception e</span>) &#123;  </div><div class="line"> </div><div class="line">       &#125;</div><div class="line">   &#125;  </div><div class="line"> </div><div class="line">   public static Singleton getSingleton(<span class="params"></span>) &#123;  </div><div class="line"> </div><div class="line">       return singleton;  </div><div class="line">   &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>调用：</strong><br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Singleton singleton = SingletonFactory.getSingleton()<span class="comment">;  </span></div><div class="line">Singleton singleton2 = SingletonFactory.getSingleton()<span class="comment">;  </span></div><div class="line">System.out.println(singleton)<span class="comment">;  </span></div><div class="line">System.out.println(singleton2)<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+<p>打印后发现对象是相同的。</p>
+<p><strong>4.延迟初始化</strong></p>
+<p>一个对象被消费完毕后，并不立刻释放，工厂类保持其初始状态，等待再次被使用。</p>
+<p>###工厂方法模式优缺点</p>
+<p><strong>1.优点</strong></p>
+<pre><code>工厂方法模式是完全符合开闭原则的；
+
+工厂模式是一种典型的解耦模式,可以降低对象之间的耦合度；
+
+工厂模式是依靠抽象架构的，它把实例化产品的任务交由实现类完成，扩展性比较好。
+
+可以使代码结构清晰，有效地封装变化。
+
+对调用者屏蔽具体的产品类。如果使用工厂模式，调用者只关心产品的接口就可以了，至于具体的实现，调用者根本无需关心。即使变更了具体的实现，对调用者来说没有任何影响。
+</code></pre><p><strong>2.缺点</strong></p>
+<p> 简单的对象应用时，不适合工厂方法模式。</p>
+<p>###模式应用</p>
+<p>工厂方法经常用在以下两种情况中:</p>
+<pre><code>第一种情况是对于某个产品，调用者清楚地知道应该使用哪个具体工厂服务，实例化该具体工厂，生产出具体的产品来。Java Collection中的iterator() 方法即属于这种情况。
+
+第二种情况，只是需要一种产品，而不想知道也不需要知道究竟是哪个工厂为生产的，即最终选用哪个具体工厂的决定权在生产者一方，它们根据当前系统的情况来实例化一个具体的工厂返回给使用者，而这个决策过程这对于使用者来说是透明的。
+</code></pre><p>文章学习参考了《设计模式之禅》</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/erweima.jpg" alt="秦子帅 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎您扫一扫上面的微信公众号，带你走进Android、Python技术！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="秦子帅 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/17/设计模式(1)-单例模式/" rel="next" title="设计模式(1)-单例模式">
+                <i class="fa fa-chevron-left"></i> 设计模式(1)-单例模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/17/设计模式(3)-抽象工厂模式详解(易懂)/" rel="prev" title="设计模式(3)-抽象工厂模式详解(易懂)">
+                设计模式(3)-抽象工厂模式详解(易懂) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="vcomments"></div>
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/aaa.jpg"
+                alt="秦子帅" />
+            
+              <p class="site-author-name" itemprop="name">秦子帅</p>
+              <p class="site-description motion-element" itemprop="description">欢迎关注我的微信公众号「秦子帅」</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/javaexception" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.toutiao.com/c/user/51132986923/#mid=1578969957916685" target="_blank" title="今日头条">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>今日头条</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/2a55d6e39135" target="_blank" title="简书">
+                    
+                      <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://blog.csdn.net/qq_34908107" target="_blank" title="CSDN">
+                    
+                      <i class="fa fa-fw fa-crosshairs"></i>CSDN</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/57af46988ac247005f05846a" target="_blank" title="掘金">
+                    
+                      <i class="fa fa-fw fa-spinner"></i>掘金</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017-2018 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">秦子帅</span>
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.7-rc3/dist/Valine.min.js"></script>
+  <script type="text/javascript">
+    new Valine({
+        av: AV,
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        app_id: 'HOWDrN7uDVaroNbXnUsm6OsQ-gzGzoHsz',
+        app_key: 'MVEsuywlj4aATAK8E7d1EFjY',
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊! ！'
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("HOWDrN7uDVaroNbXnUsm6OsQ-gzGzoHsz", "MVEsuywlj4aATAK8E7d1EFjY");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+<!-- С���� -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

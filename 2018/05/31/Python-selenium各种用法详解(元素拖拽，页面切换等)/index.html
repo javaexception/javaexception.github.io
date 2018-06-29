@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Selenium," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言今天讲一下selenium的具体的用法，至于基本的方法大家可以直接查看selenium API，这里只写一部分： 单个元素选取  find_element_by_id  find_element_by_name  find_element_by_xpath  find_element_by_link_text  find_element_by_partial_link_text  find_">
+<meta name="keywords" content="Selenium">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python-selenium各种用法详解(元素拖拽，页面切换等)">
+<meta property="og:url" content="http://wanqinlong.com/2018/05/31/Python-selenium各种用法详解(元素拖拽，页面切换等)/index.html">
+<meta property="og:site_name" content="秦子帅的博客">
+<meta property="og:description" content="前言今天讲一下selenium的具体的用法，至于基本的方法大家可以直接查看selenium API，这里只写一部分： 单个元素选取  find_element_by_id  find_element_by_name  find_element_by_xpath  find_element_by_link_text  find_element_by_partial_link_text  find_">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-31T13:51:27.747Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python-selenium各种用法详解(元素拖拽，页面切换等)">
+<meta name="twitter:description" content="前言今天讲一下selenium的具体的用法，至于基本的方法大家可以直接查看selenium API，这里只写一部分： 单个元素选取  find_element_by_id  find_element_by_name  find_element_by_xpath  find_element_by_link_text  find_element_by_partial_link_text  find_">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wanqinlong.com/2018/05/31/Python-selenium各种用法详解(元素拖拽，页面切换等)/"/>
+
+
+
+
+
+  <title>Python-selenium各种用法详解(元素拖拽，页面切换等) | 秦子帅的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">秦子帅的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Android Developer | 一直在路上，为梦想奋斗！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home  ��ҳ"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user ����"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wanqinlong.com/2018/05/31/Python-selenium各种用法详解(元素拖拽，页面切换等)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="秦子帅">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/aaa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="秦子帅的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python-selenium各种用法详解(元素拖拽，页面切换等)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-31T21:51:37+08:00">
+                2018-05-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/05/31/Python-selenium各种用法详解(元素拖拽，页面切换等)/" class="leancloud_visitors" data-flag-title="Python-selenium各种用法详解(元素拖拽，页面切换等)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>今天讲一下selenium的具体的用法，至于基本的方法大家可以直接查看selenium API，这里只写一部分：</p>
+<p><strong>单个元素选取</strong></p>
+<ul>
+<li><p>find_element_by_id</p>
+</li>
+<li><p>find_element_by_name</p>
+</li>
+<li><p>find_element_by_xpath</p>
+</li>
+<li><p>find_element_by_link_text</p>
+</li>
+<li><p>find_element_by_partial_link_text</p>
+</li>
+<li><p>find_element_by_tag_name</p>
+</li>
+<li><p>find_element_by_class_name</p>
+</li>
+<li><p>find_element_by_css_selector</p>
+<a id="more"></a>
+</li>
+</ul>
+<p><strong>多个元素选取</strong></p>
+<ul>
+<li><p>find_elements_by_name</p>
+</li>
+<li><p>find_elements_by_xpath</p>
+</li>
+<li><p>find_elements_by_link_text</p>
+</li>
+<li><p>find_elements_by_partial_link_text</p>
+</li>
+<li><p>find_elements_by_tag_name</p>
+</li>
+<li><p>find_elements_by_class_name</p>
+</li>
+<li><p>find_elements_by_css_selector</p>
+</li>
+</ul>
+<h3 id="Selenium具体用法"><a href="#Selenium具体用法" class="headerlink" title="Selenium具体用法"></a>Selenium具体用法</h3><p><strong>1.页面交互</strong></p>
+<p>下面我举例说明，打开百度浏览器，输入“selenium”，并进行搜索，打印源代码，具体代码如下：</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">def pageInteraction():</div><div class="line">   driver = webdriver.Firefox()</div><div class="line">   driver.<span class="built_in">get</span>(<span class="string">'http://www.baidu.com'</span>)</div><div class="line">   <span class="comment"># 隐示等待，为了等待充分加载好网址</span></div><div class="line">   driver.implicitly_wait(<span class="number">5</span>)</div><div class="line">   <span class="built_in">write</span> = driver.find_element_by_id(<span class="string">"kw"</span>)</div><div class="line">   <span class="built_in">write</span>.send_keys(<span class="string">"Selenium"</span>)</div><div class="line">   <span class="comment"># 点击</span></div><div class="line">   driver.find_element_by_id(<span class="string">'su'</span>).click()</div><div class="line">   <span class="keyword">try</span>:</div><div class="line">       <span class="comment"># 显示等待，其中5的解释：5秒内每隔0.5毫秒扫描1次页面变化，直到指定的元素</span></div><div class="line">       <span class="built_in">wait</span> = WebDriverWait(driver, <span class="number">5</span>)</div><div class="line">       <span class="built_in">wait</span>.<span class="keyword">until</span>(lambda driver: driver.find_element_by_id(<span class="string">"content_left"</span>))</div><div class="line">       <span class="comment"># 打印源代码</span></div><div class="line">       print(driver.page_source)</div><div class="line"></div><div class="line">   except TimeoutException:</div><div class="line">       print(<span class="string">"查询元素超时"</span>)</div><div class="line">   <span class="keyword">finally</span>:</div><div class="line">       driver.<span class="built_in">close</span>()</div></pre></td></tr></table></figure>
+<p><strong>2.页面元素推拽</strong></p>
+<p>需要导入ActionChains包，url网址来源于网络</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">def elementDragging():</div><div class="line">   <span class="keyword">try</span>:</div><div class="line">       driver = webdriver.Firefox()</div><div class="line">       url = <span class="string">"http://www.runoob.com/try/try.php?filename=jqueryui-api-droppable"</span></div><div class="line">       driver.<span class="built_in">get</span>(url)</div><div class="line">       driver.implicitly_wait(<span class="number">5</span>)</div><div class="line">       <span class="comment"># 切换到元素所在的frame</span></div><div class="line">       driver.switch_to.frame(<span class="string">"iframeResult"</span>)</div><div class="line">       <span class="comment"># 起点</span></div><div class="line">       <span class="built_in">start</span> = driver.find_element_by_id(<span class="string">"draggable"</span>)</div><div class="line">       <span class="comment"># 终点</span></div><div class="line">       <span class="function"><span class="keyword">end</span> = <span class="title">driver</span>.<span class="title">find_element_by_id</span>("<span class="title">droppable</span>")</span></div><div class="line"></div><div class="line">       actions = ActionChains(driver)</div><div class="line">       actions.drag_and_drop(<span class="built_in">start</span>, <span class="keyword">end</span>)</div><div class="line">       <span class="comment"># 执行</span></div><div class="line">       actions.perform()</div><div class="line">   except Exception:</div><div class="line">       print(<span class="string">"exception"</span>)</div><div class="line">   <span class="keyword">finally</span>:</div><div class="line">       driver.<span class="built_in">close</span>()</div></pre></td></tr></table></figure>
+<p><strong>3.页面切换</strong></p>
+<p>通过百度搜索关键词并打开一个网页，切换到新的窗口页面，再打开第三个页面</p>
+<p>主要用到了下面三个方法：</p>
+<ul>
+<li><p>current_window_handl：获得当前窗口句柄</p>
+</li>
+<li><p>window_handles：返回所有窗口的句柄到当前会话</p>
+</li>
+<li><p>switch_to_window()：切换窗口函数</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">pageSwitching</span><span class="params">()</span>:</span></div><div class="line">   driver = webdriver.Firefox()</div><div class="line">   driver.get(<span class="string">'http://www.baidu.com'</span>)</div><div class="line">   <span class="comment">#获取当前百度界面的窗口句柄</span></div><div class="line">   BD_windows = driver.current_window_handle</div><div class="line">   <span class="comment">#打印</span></div><div class="line">   print(BD_windows)</div><div class="line">   <span class="comment"># 隐示等待，为了等待充分加载好网址</span></div><div class="line">   driver.implicitly_wait(<span class="number">5</span>)</div><div class="line"></div><div class="line">   write = driver.find_element_by_id(<span class="string">"kw"</span>)</div><div class="line">   write.send_keys(<span class="string">"CSDN"</span>)</div><div class="line">   <span class="comment"># 点击</span></div><div class="line">   driver.find_element_by_id(<span class="string">'su'</span>).click()</div><div class="line">   <span class="keyword">try</span>:</div><div class="line">       <span class="comment">#打开一个网页</span></div><div class="line">       driver.find_element_by_link_text(<span class="string">u'CSDN-专业IT技术社区'</span>).click()</div><div class="line">       <span class="comment"># 隐示等待，为了等待充分加载好网址</span></div><div class="line">       driver.implicitly_wait(<span class="number">5</span>)</div><div class="line">       <span class="comment">#打印所有的窗口</span></div><div class="line">       print(driver.window_handles)</div><div class="line">       <span class="comment"># 隐示等待，为了等待充分加载好网址</span></div><div class="line">       driver.implicitly_wait(<span class="number">5</span>)</div><div class="line">       <span class="comment">#窗口切换到第二个网页</span></div><div class="line">       driver.switch_to_window(driver.window_handles[<span class="number">1</span>])</div><div class="line">       <span class="comment">#点击第二个网页的"写博客"按钮</span></div><div class="line">       driver.find_element_by_link_text(<span class="string">u'写博客'</span>).click()</div><div class="line">       time.sleep(<span class="number">5</span>)</div><div class="line"></div><div class="line">   <span class="keyword">except</span> Exception:</div><div class="line">       print(<span class="string">"exception"</span>)</div><div class="line">   <span class="keyword">finally</span>:</div><div class="line">       driver.quit()</div></pre></td></tr></table></figure>
+<p><strong>4.弹窗处理</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">alert = driver.switch_to_alert()</div><div class="line"><span class="function"><span class="title">print</span><span class="params">(alert .text)</span></span></div><div class="line">alert .accept()</div></pre></td></tr></table></figure>
+<p>下面是全部的源码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># coding=utf-8</span></div><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"><span class="keyword">from</span> selenium.common.exceptions <span class="keyword">import</span> TimeoutException</div><div class="line"><span class="keyword">from</span> selenium.webdriver.support.wait <span class="keyword">import</span> WebDriverWait</div><div class="line"><span class="keyword">from</span> selenium.webdriver <span class="keyword">import</span> ActionChains</div><div class="line"><span class="keyword">import</span> time</div><div class="line"></div><div class="line"><span class="comment">#页面交互</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">pageInteraction</span><span class="params">()</span>:</span></div><div class="line">   driver = webdriver.Firefox()</div><div class="line">   driver.get(<span class="string">'http://www.baidu.com'</span>)</div><div class="line">   <span class="comment"># 隐示等待，为了等待充分加载好网址</span></div><div class="line">   driver.implicitly_wait(<span class="number">5</span>)</div><div class="line">   write = driver.find_element_by_id(<span class="string">"kw"</span>)</div><div class="line">   write.send_keys(<span class="string">"Selenium"</span>)</div><div class="line">   <span class="comment"># 点击</span></div><div class="line">   driver.find_element_by_id(<span class="string">'su'</span>).click()</div><div class="line">   <span class="keyword">try</span>:</div><div class="line">       <span class="comment"># 显示等待，其中5的解释：5秒内每隔0.5毫秒扫描1次页面变化，直到指定的元素</span></div><div class="line">       wait = WebDriverWait(driver, <span class="number">5</span>)</div><div class="line">       wait.until(<span class="keyword">lambda</span> driver: driver.find_element_by_id(<span class="string">"content_left"</span>))</div><div class="line">       <span class="comment"># 打印源代码</span></div><div class="line">       print(driver.page_source)</div><div class="line"></div><div class="line">   <span class="keyword">except</span> TimeoutException:</div><div class="line">       print(<span class="string">"查询元素超时"</span>)</div><div class="line">   <span class="keyword">finally</span>:</div><div class="line">       time.sleep(<span class="number">3</span>)</div><div class="line">       driver.close()</div><div class="line"></div><div class="line"><span class="comment">#页面元素拖拽</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">elementDragging</span><span class="params">()</span>:</span></div><div class="line">   <span class="keyword">try</span>:</div><div class="line">       driver = webdriver.Firefox()</div><div class="line">       url = <span class="string">"http://www.runoob.com/try/try.php?filename=jqueryui-api-droppable"</span></div><div class="line">       driver.get(url)</div><div class="line">       driver.implicitly_wait(<span class="number">5</span>)</div><div class="line">       <span class="comment"># 切换到元素所在的frame</span></div><div class="line">       driver.switch_to.frame(<span class="string">"iframeResult"</span>)</div><div class="line">       <span class="comment"># 起点</span></div><div class="line">       start = driver.find_element_by_id(<span class="string">"draggable"</span>)</div><div class="line">       <span class="comment"># 终点</span></div><div class="line">       end = driver.find_element_by_id(<span class="string">"droppable"</span>)</div><div class="line"></div><div class="line">       actions = ActionChains(driver)</div><div class="line">       actions.drag_and_drop(start, end)</div><div class="line">       <span class="comment"># 执行</span></div><div class="line">       actions.perform()</div><div class="line">   <span class="keyword">except</span> Exception:</div><div class="line">       print(<span class="string">"exception"</span>)</div><div class="line">   <span class="keyword">finally</span>:</div><div class="line">       driver.close()</div><div class="line"></div><div class="line"><span class="comment">#页面切换</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">pageSwitching</span><span class="params">()</span>:</span></div><div class="line">   driver = webdriver.Firefox()</div><div class="line">   driver.get(<span class="string">'http://www.baidu.com'</span>)</div><div class="line">   <span class="comment">#获取当前百度界面的窗口句柄</span></div><div class="line">   BD_windows = driver.current_window_handle</div><div class="line">   <span class="comment">#打印</span></div><div class="line">   print(BD_windows)</div><div class="line">   <span class="comment"># 隐示等待，为了等待充分加载好网址</span></div><div class="line">   driver.implicitly_wait(<span class="number">5</span>)</div><div class="line"></div><div class="line">   write = driver.find_element_by_id(<span class="string">"kw"</span>)</div><div class="line">   write.send_keys(<span class="string">"CSDN"</span>)</div><div class="line">   <span class="comment"># 点击</span></div><div class="line">   driver.find_element_by_id(<span class="string">'su'</span>).click()</div><div class="line">   <span class="keyword">try</span>:</div><div class="line">       <span class="comment">#打开一个网页</span></div><div class="line">       driver.find_element_by_link_text(<span class="string">u'CSDN-专业IT技术社区'</span>).click()</div><div class="line">       <span class="comment"># 隐示等待，为了等待充分加载好网址</span></div><div class="line">       driver.implicitly_wait(<span class="number">5</span>)</div><div class="line">       <span class="comment">#打印所有的窗口</span></div><div class="line">       print(driver.window_handles)</div><div class="line">       <span class="comment"># 隐示等待，为了等待充分加载好网址</span></div><div class="line">       driver.implicitly_wait(<span class="number">5</span>)</div><div class="line">       <span class="comment">#窗口切换到第二个网页</span></div><div class="line">       driver.switch_to_window(driver.window_handles[<span class="number">1</span>])</div><div class="line">       <span class="comment">#点击第二个网页的"写博客"按钮</span></div><div class="line">       driver.find_element_by_link_text(<span class="string">u'写博客'</span>).click()</div><div class="line">       time.sleep(<span class="number">5</span>)</div><div class="line"></div><div class="line">   <span class="keyword">except</span> Exception:</div><div class="line">       print(<span class="string">"exception"</span>)</div><div class="line">   <span class="keyword">finally</span>:</div><div class="line"></div><div class="line">       driver.quit()</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    pageInteraction()</div><div class="line">    <span class="comment">#pageSwitching()</span></div><div class="line">    <span class="comment">#elementDragging()</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/erweima.jpg" alt="秦子帅 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎您扫一扫上面的微信公众号，带你走进Android、Python技术！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="秦子帅 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Selenium/" rel="tag"># Selenium</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/31/Selenium的安装与Firefox配置/" rel="next" title="Selenium的安装与Firefox配置">
+                <i class="fa fa-chevron-left"></i> Selenium的安装与Firefox配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/31/Python爬虫实战(5)-爬取淘宝网服装图片(Selenium+Firefox)/" rel="prev" title="Python爬虫实战(5)-爬取淘宝网服装图片(Selenium+Firefox)">
+                Python爬虫实战(5)-爬取淘宝网服装图片(Selenium+Firefox) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="vcomments"></div>
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/aaa.jpg"
+                alt="秦子帅" />
+            
+              <p class="site-author-name" itemprop="name">秦子帅</p>
+              <p class="site-description motion-element" itemprop="description">欢迎关注我的微信公众号「秦子帅」</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/javaexception" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.toutiao.com/c/user/51132986923/#mid=1578969957916685" target="_blank" title="今日头条">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>今日头条</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/2a55d6e39135" target="_blank" title="简书">
+                    
+                      <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://blog.csdn.net/qq_34908107" target="_blank" title="CSDN">
+                    
+                      <i class="fa fa-fw fa-crosshairs"></i>CSDN</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/57af46988ac247005f05846a" target="_blank" title="掘金">
+                    
+                      <i class="fa fa-fw fa-spinner"></i>掘金</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Selenium具体用法"><span class="nav-number">2.</span> <span class="nav-text">Selenium具体用法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017-2018 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">秦子帅</span>
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.7-rc3/dist/Valine.min.js"></script>
+  <script type="text/javascript">
+    new Valine({
+        av: AV,
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        app_id: 'HOWDrN7uDVaroNbXnUsm6OsQ-gzGzoHsz',
+        app_key: 'MVEsuywlj4aATAK8E7d1EFjY',
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊! ！'
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("HOWDrN7uDVaroNbXnUsm6OsQ-gzGzoHsz", "MVEsuywlj4aATAK8E7d1EFjY");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+<!-- С���� -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

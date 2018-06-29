@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="萤石云," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="去年在项目中用到了萤石云视频，它的项目源码很多，找到有用的代码很费时间，所以今天写成文章把集成步骤，预览功能，双击放大，手势放大功能以及注意事项等分享给大家。效果图如下:">
+<meta name="keywords" content="萤石云">
+<meta property="og:type" content="article">
+<meta property="og:title" content="萤石云视频EZOpenSDK集成(实现播放，视频放大功能)">
+<meta property="og:url" content="http://wanqinlong.com/2018/02/06/萤石云视频EZOpenSDK集成(实现播放，视频放大功能)/index.html">
+<meta property="og:site_name" content="秦子帅的博客">
+<meta property="og:description" content="去年在项目中用到了萤石云视频，它的项目源码很多，找到有用的代码很费时间，所以今天写成文章把集成步骤，预览功能，双击放大，手势放大功能以及注意事项等分享给大家。效果图如下:">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-e098c8b4e9656bf4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-542d1cdc85ff525b?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-87368c8c5b040f9b?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-a0704be4b590861a?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-05-31T13:10:08.109Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="萤石云视频EZOpenSDK集成(实现播放，视频放大功能)">
+<meta name="twitter:description" content="去年在项目中用到了萤石云视频，它的项目源码很多，找到有用的代码很费时间，所以今天写成文章把集成步骤，预览功能，双击放大，手势放大功能以及注意事项等分享给大家。效果图如下:">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2787891-e098c8b4e9656bf4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wanqinlong.com/2018/02/06/萤石云视频EZOpenSDK集成(实现播放，视频放大功能)/"/>
+
+
+
+
+
+  <title>萤石云视频EZOpenSDK集成(实现播放，视频放大功能) | 秦子帅的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">秦子帅的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Android Developer | 一直在路上，为梦想奋斗！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home  ��ҳ"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user ����"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wanqinlong.com/2018/02/06/萤石云视频EZOpenSDK集成(实现播放，视频放大功能)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="秦子帅">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/aaa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="秦子帅的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">萤石云视频EZOpenSDK集成(实现播放，视频放大功能)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-06T22:33:30+08:00">
+                2018-02-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android干货/" itemprop="url" rel="index">
+                    <span itemprop="name">Android干货</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/02/06/萤石云视频EZOpenSDK集成(实现播放，视频放大功能)/" class="leancloud_visitors" data-flag-title="萤石云视频EZOpenSDK集成(实现播放，视频放大功能)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>去年在项目中用到了萤石云视频，它的项目源码很多，找到有用的代码很费时间，所以今天写成文章把集成步骤，预览功能，双击放大，手势放大功能以及注意事项等分享给大家。<br>效果图如下:</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-e098c8b4e9656bf4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><a id="more"></a><br>萤石开发平台地址:<br><a href="https://open.ys7.com/" target="_blank" rel="external">https://open.ys7.com/</a><br><img src="http://upload-images.jianshu.io/upload_images/2787891-542d1cdc85ff525b?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>点击”文档”进入萤石云开发平台开发文档使用。</p>
+<hr>
+<p>##<strong>集成步骤:</strong><br><strong>1. 创建应用</strong><br>首先，你需要在萤石开放平台官网的 “ 开发者服务-我的应用-应用秘钥 ” 查看Appkey。<br><strong>2.安装 SDK</strong><br><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">dependencies</span> &#123;    <span class="keyword">compile</span> <span class="string">'com.hikvision.ezviz:ezviz-sdk:4.5.1'</span> &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>3. 配置 Android 权限</strong><br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"> &lt;uses-permission android:<span class="attribute">name</span>=<span class="string">"android.permission.INTERNET"</span>/&gt;</div><div class="line">&lt;uses-permission android:<span class="attribute">name</span>=<span class="string">"android.permission.ACCESS_NETWORK_STATE"</span>/&gt;</div><div class="line">&lt;uses-permission android:<span class="attribute">name</span>=<span class="string">"android.permission.RECORD_AUDIO"</span>/&gt;</div><div class="line">&lt;uses-permission android:<span class="attribute">name</span>=<span class="string">"android.permission.READ_PHONE_STATE"</span>/&gt;</div><div class="line">&lt;uses-permission android:<span class="attribute">name</span>=<span class="string">"android.permission.MOUNT_UNMOUNT_FILESYSTEMS"</span>/&gt;</div><div class="line">&lt;uses-permission android:<span class="attribute">name</span>=<span class="string">"android.permission.WRITE_EXTERNAL_STORAGE"</span>/&gt;</div><div class="line">&lt;uses-permission android:<span class="attribute">name</span>=<span class="string">"android.permission.ACCESS_WIFI_STATE"</span>/&gt;</div><div class="line">&lt;uses-permission android:<span class="attribute">name</span>=<span class="string">"android.permission.CHANGE_WIFI_STATE"</span>/&gt;</div><div class="line">&lt;uses-permission android:<span class="attribute">name</span>=<span class="string">"android.permission.READ_LOGS"</span>/&gt;</div><div class="line">&lt;uses-permission android:<span class="attribute">name</span>=<span class="string">"android.permission.CHANGE_WIFI_MULTICAST_STATE"</span>/&gt;</div></pre></td></tr></table></figure></p>
+<p><strong>4. 配置 build.gradle</strong><br><figure class="highlight clean"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">defaultConfig &#123;</div><div class="line">       ...</div><div class="line">        targetSdkVersion <span class="number">22</span><span class="comment">//小于23</span></div><div class="line">       ...</div><div class="line">        ndk &#123;</div><div class="line">            abiFilters <span class="string">"armeabi-v7a"</span><span class="comment">//只支持32位</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">     sourceSets &#123;</div><div class="line">        main &#123;</div><div class="line">            jniLibs.srcDirs = [<span class="string">'libs'</span>]</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>注意:</strong><br>(1).目前提供所有so均为32位，只能在armeabi-v7a引用，所以需要添加<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class">ndk </span>&#123;</div><div class="line">    abiFilters <span class="string">"armeabi-v7a"</span><span class="comment">//只支持32位</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>(2).targetSdkVersion设置为23及以上，在android6.0系统的手机上会出现没有权限崩溃的情况，因为android6.0牵扯到Dangerous Permissions问题，如果需要使用高版本，需要自己处理Dangerous Permissions。</p>
+<p><strong>5. 配置 AndroidManifest.xml</strong><br><figure class="highlight django"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="xml"><span class="tag">&lt;<span class="name">activity</span></span></span></div><div class="line"><span class="xml">        android:name="com.videogo.main.EzvizWebViewActivity"</span></div><div class="line"><span class="xml">        android:screenOrientation="portrait"</span></div><div class="line"><span class="xml">        android:configChanges="orientation|keyboardHidden"</span></div><div class="line"><span class="xml">    <span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span></div><div class="line"><span class="xml"></span></div><div class="line"><span class="xml"> <span class="tag">&lt;<span class="name">receiver</span></span></span></div><div class="line"><span class="xml">       android:name="you_BroadcastReceiver"</span></div><div class="line"><span class="xml">       android:exported="false" &gt;</span></div><div class="line"><span class="xml">       <span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span></div><div class="line"><span class="xml">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"com.videogo.action.OAUTH_SUCCESS_ACTION"</span> /&gt;</span></span></div><div class="line"><span class="xml">            <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.net.conn.CONNECTIVITY_CHANGE"</span> /&gt;</span></span></div><div class="line"><span class="xml">        <span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span></div><div class="line"><span class="xml">   <span class="tag">&lt;/<span class="name">receiver</span>&gt;</span></span></div></pre></td></tr></table></figure></p>
+<p><strong>6.代码初始化</strong><br>要在Application中初始化<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"><span class="markdown">/**</span></span></div><div class="line"><span class="comment"><span class="markdown"><span class="bullet">* </span>APP_KEY请替换成自己申请的</span></span></div><div class="line"><span class="comment"><span class="markdown">*/</span></span></div><div class="line">EZOpenSDK.initLib(<span class="keyword">this</span>, APP_KEY, <span class="string">""</span>);</div></pre></td></tr></table></figure></p>
+<p>代码混淆直接去看开发文档，这里就省略了。</p>
+<p><strong>7.重要名词解释:</strong><br><img src="http://upload-images.jianshu.io/upload_images/2787891-87368c8c5b040f9b?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<hr>
+<p>##<strong>初始化流程</strong><br><strong>1.初始化SDK-initLib，也就是在Application。</strong><br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">EZOpenSDK.initLib(<span class="keyword">this</span>, APP_KEY,<span class="string">""</span>);</div></pre></td></tr></table></figure></p>
+<p><strong>2.获取AccessToken.</strong><br><figure class="highlight less"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">EZOpenSDK</span><span class="selector-class">.getInstance</span>()<span class="selector-class">.setAccessToken</span>(<span class="string">"您要填的Token值"</span>);</div></pre></td></tr></table></figure></p>
+<p><strong>3.您购买的摄像机设备添加在萤石云APP上。</strong>(直接在下载APP通过序列号添加)</p>
+<p>如果您开发中还要获取设计列表等等的功能请直接查看萤石云开发平台文档。</p>
+<hr>
+<p>##<strong>播放视频流程及实现代码:</strong><br>播放流程:<br><img src="http://upload-images.jianshu.io/upload_images/2787891-a0704be4b590861a?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>1.初始化EZPlayer调用EZOpenSDK的createPlayer，详见api；<br>2.预览播放成功后可以进行以下操作：录像、拍照、画面翻转、对讲、云台控制、声音开关、视频画面缩放、拖动进度播放，详见api的EZPlayer，其中设备控制该接口的如云台控制和镜头显示功能、对讲，属于限制级接口，要优选通过判断设备的能力集来调用，设备能力集请查看EZDeviceInfo对象的属性值来判断具体方法；<br>3.关于对讲功能，如果预览播放有声音输出，则在开启对讲前需要关闭预览播放的声音closeSound，关闭对讲后开启预览播放的声音openSound，详见demo；<br>4.EZOpenSDK中的setVideoLevel设置视频清晰度（videoLevel），此调节可以在视频播放前设置也可以在视频播放成功后设置，视频播放成功后设置了清晰度需要先停止播放stopRealPlay然后重新开启播放startRealPlay才能生效；<br>5.开始播放之后在消息回调中会收到a、成功消息：EZRealPlayConstants.MSG_REALPLAY_PLAY_SUCCESS，b、失败消息：EZRealPlayConstants.MSG_REALPLAY_PLAY_FAIL，失败回调时查看errorCode，如果为400035（需要输入验证码）和400036（验证码错误），则需要开发者自己处理让用户重新输入验证密码，并调用setPlayVerifyCode设置密码，然后重新启动播放。</p>
+<p><strong>实现代码:</strong><br>布局主要控件是SurfaceView，SurfaceView的用法大家应该都知道吧，主要实现了implements SurfaceHolder.Callback接口，声明SurfaceView 对象，并实方法，代码如下：<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> SurfaceView mRealPlaySv = <span class="literal">null</span>;</div><div class="line"><span class="keyword">private</span> SurfaceHolder mRealPlaySh = <span class="literal">null</span>;</div></pre></td></tr></table></figure></p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">mRealPlaySh</span> = mRealPlaySv.getHolder()<span class="comment">;</span></div><div class="line">mRealPlaySh.addCallback(VideoActivity.this)<span class="comment">;</span></div></pre></td></tr></table></figure>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">surfaceCreated</span><span class="params">(SurfaceHolder holder)</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (mEZPlayer != <span class="keyword">null</span>) &#123;</div><div class="line"></div><div class="line">        mEZPlayer.setSurfaceHold(holder);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">    mRealPlaySh = holder;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">surfaceChanged</span><span class="params">(SurfaceHolder holder, <span class="keyword">int</span> format, <span class="keyword">int</span> width, <span class="keyword">int</span> height)</span> </span>&#123;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">void</span> <span class="title">surfaceDestroyed</span><span class="params">(SurfaceHolder holder)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (mEZPlayer != <span class="keyword">null</span>) &#123;</div><div class="line">        mEZPlayer.setSurfaceHold(<span class="keyword">null</span>);</div><div class="line">    &#125;</div><div class="line">    mRealPlaySh = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;SurfaceView</div><div class="line">    android:<span class="attribute">id</span>=<span class="string">"@+id/realplay_sv"</span></div><div class="line">    android:<span class="attribute">layout_width</span>=<span class="string">"match_parent"</span></div><div class="line">    android:<span class="attribute">layout_height</span>=<span class="string">"match_parent"</span></div><div class="line">    android:<span class="attribute">layout_alignParentLeft</span>=<span class="string">"true"</span></div><div class="line">    android:<span class="attribute">layout_alignParentStart</span>=<span class="string">"true"</span></div><div class="line">    android:<span class="attribute">layout_alignParentTop</span>=<span class="string">"true"</span></div><div class="line">    android:<span class="attribute">background</span>=<span class="string">"@android:color/transparent"</span> /&gt;</div></pre></td></tr></table></figure>
+<p><strong>1.初始化EZPlayer，绑定设备，开始播放。</strong></p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mEZPlayer = YourApplication.getOpenSDK<span class="params">()</span><span class="string">.createPlayer</span><span class="params">(deviceSerial, cameraNo)</span>;<span class="string">//</span>绑定设备</div><div class="line">        mEZPlayer.<span class="keyword">set</span>Handler<span class="params">(mHandler)</span>;</div><div class="line">        mEZPlayer.<span class="keyword">set</span>SurfaceHold<span class="params">(mRealPlaySh)</span>;</div><div class="line">        mEZPlayer.startRealPlay<span class="params">()</span>;<span class="string">//</span>开始播放</div></pre></td></tr></table></figure>
+<p><strong>2.播放回调</strong><br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"><span class="comment">视频的回调</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">boolean</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span> </span>&#123;</div><div class="line">    <span class="comment">//   Log.e("回调","true+zong"+msg);</span></div><div class="line">    <span class="keyword">switch</span> (msg.what) &#123;</div><div class="line"><span class="comment">//播放成功的回调</span></div><div class="line">        <span class="keyword">case</span> EZConstants.EZRealPlayConstants.MSG_REALPLAY_PLAY_SUCCESS:</div><div class="line"></div><div class="line"><span class="keyword">break</span>;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<p>##<strong>视频放大，手势放大功能</strong><br>在播放成功的回调里加上  setRealPlaySvLayout();方法，方法的代码如下:<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">void</span> setRealPlaySvLayout() <span class="keyword">throws</span> InnerException, PlaySDKException &#123;</div><div class="line">    DisplayMetrics dm = <span class="keyword">new</span> DisplayMetrics();</div><div class="line">    getWindowManager().getDefaultDisplay().getMetrics(dm);</div><div class="line">    <span class="built_in">int</span> whdth = dm.widthPixels;</div><div class="line">    <span class="built_in">int</span> <span class="built_in">height</span> = dm.heightPixels;</div><div class="line">    mRealPlayTouchListener.setSacaleRect(Constant.MAX_SCALE, <span class="number">0</span>, <span class="number">0</span>, whdth, <span class="built_in">height</span>);</div><div class="line">    setPlayScaleUI(<span class="number">1</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">void</span> setPlayScaleUI(<span class="built_in">float</span> <span class="built_in">scale</span>, CustomRect oRect, CustomRect curRect) &#123;</div><div class="line">    <span class="keyword">if</span> (<span class="built_in">scale</span> == <span class="number">1</span>) &#123;</div><div class="line">         </div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">if</span> (mEZPlayer != <span class="keyword">null</span>) &#123;</div><div class="line">                mEZPlayer.setDisplayRegion(<span class="keyword">false</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (BaseException e) &#123;</div><div class="line">            <span class="comment">// TODO Auto-generated catch block</span></div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">       </div><div class="line">        <span class="keyword">if</span> (mPlayScale == <span class="built_in">scale</span>) &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (mEZPlayer != <span class="keyword">null</span>) &#123;</div><div class="line">                    mEZPlayer.setDisplayRegion(<span class="keyword">true</span>, oRect, curRect);</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (BaseException e) &#123;</div><div class="line">                <span class="comment">// TODO Auto-generated catch block</span></div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">if</span> (mEZPlayer != <span class="keyword">null</span>) &#123;</div><div class="line">                mEZPlayer.setDisplayRegion(<span class="keyword">true</span>, oRect, curRect);</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (BaseException e) &#123;</div><div class="line">            <span class="comment">// TODO Auto-generated catch block</span></div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    mPlayScale = <span class="built_in">scale</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>##<strong>强调：</strong><br><strong>1.必须在onDestory()方法上注销，否则会报错，代码如下：</strong><br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>.onDestroy();</div><div class="line">    <span class="keyword">if</span> (mEZPlayer != <span class="keyword">null</span>) &#123;</div><div class="line">        mEZPlayer.release();</div><div class="line">    &#125;</div><div class="line"> </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>2.暂停播放的方法</strong><br><figure class="highlight abnf"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mEZPlayer.stopRealPlay()<span class="comment">;</span></div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/erweima.jpg" alt="秦子帅 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎您扫一扫上面的微信公众号，带你走进Android、Python技术！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="秦子帅 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/萤石云/" rel="tag"># 萤石云</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/06/Android事件传递(分发)机制/" rel="next" title="Android-事件传递(分发)机制">
+                <i class="fa fa-chevron-left"></i> Android-事件传递(分发)机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/07/回望(总结)2017，展望(规划)2018/" rel="prev" title="回望(总结)2017，展望(规划)2018">
+                回望(总结)2017，展望(规划)2018 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="vcomments"></div>
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/aaa.jpg"
+                alt="秦子帅" />
+            
+              <p class="site-author-name" itemprop="name">秦子帅</p>
+              <p class="site-description motion-element" itemprop="description">欢迎关注我的微信公众号「秦子帅」</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/javaexception" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.toutiao.com/c/user/51132986923/#mid=1578969957916685" target="_blank" title="今日头条">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>今日头条</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/2a55d6e39135" target="_blank" title="简书">
+                    
+                      <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://blog.csdn.net/qq_34908107" target="_blank" title="CSDN">
+                    
+                      <i class="fa fa-fw fa-crosshairs"></i>CSDN</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/57af46988ac247005f05846a" target="_blank" title="掘金">
+                    
+                      <i class="fa fa-fw fa-spinner"></i>掘金</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017-2018 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">秦子帅</span>
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.7-rc3/dist/Valine.min.js"></script>
+  <script type="text/javascript">
+    new Valine({
+        av: AV,
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        app_id: 'HOWDrN7uDVaroNbXnUsm6OsQ-gzGzoHsz',
+        app_key: 'MVEsuywlj4aATAK8E7d1EFjY',
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊! ！'
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("HOWDrN7uDVaroNbXnUsm6OsQ-gzGzoHsz", "MVEsuywlj4aATAK8E7d1EFjY");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+<!-- С���� -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

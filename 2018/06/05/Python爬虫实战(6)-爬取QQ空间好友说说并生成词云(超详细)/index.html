@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="爬虫实战," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言先看效果图:TXT文件：">
+<meta name="keywords" content="爬虫实战">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python爬虫实战(6)-爬取QQ空间好友说说并生成词云(超详细)">
+<meta property="og:url" content="http://wanqinlong.com/2018/06/05/Python爬虫实战(6)-爬取QQ空间好友说说并生成词云(超详细)/index.html">
+<meta property="og:site_name" content="秦子帅的博客">
+<meta property="og:description" content="前言先看效果图:TXT文件：">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2787891-3d2ddf210113677e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2787891-3ea1463be9b6da20.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2787891-2f6045135daa934f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2787891-02e2641d3f0b1f67.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-06-05T13:10:49.468Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python爬虫实战(6)-爬取QQ空间好友说说并生成词云(超详细)">
+<meta name="twitter:description" content="前言先看效果图:TXT文件：">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2787891-3d2ddf210113677e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wanqinlong.com/2018/06/05/Python爬虫实战(6)-爬取QQ空间好友说说并生成词云(超详细)/"/>
+
+
+
+
+
+  <title>Python爬虫实战(6)-爬取QQ空间好友说说并生成词云(超详细) | 秦子帅的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">秦子帅的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Android Developer | 一直在路上，为梦想奋斗！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home  ��ҳ"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user ����"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wanqinlong.com/2018/06/05/Python爬虫实战(6)-爬取QQ空间好友说说并生成词云(超详细)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="秦子帅">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/aaa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="秦子帅的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python爬虫实战(6)-爬取QQ空间好友说说并生成词云(超详细)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-05T21:11:03+08:00">
+                2018-06-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python爬虫实战/" itemprop="url" rel="index">
+                    <span itemprop="name">Python爬虫实战</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/06/05/Python爬虫实战(6)-爬取QQ空间好友说说并生成词云(超详细)/" class="leancloud_visitors" data-flag-title="Python爬虫实战(6)-爬取QQ空间好友说说并生成词云(超详细)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>先看效果图:<br><img src="https://upload-images.jianshu.io/upload_images/2787891-3d2ddf210113677e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br>TXT文件：<br><img src="https://upload-images.jianshu.io/upload_images/2787891-3ea1463be9b6da20.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><a id="more"></a><br>如果想生成特定图片样式的词云图，可以直接访问下面这篇文章学一下：<br><a href="https://mp.weixin.qq.com/s/FUwQ4jZu6KMkjRvEG3UfGw" target="_blank" rel="external">https://mp.weixin.qq.com/s/FUwQ4jZu6KMkjRvEG3UfGw</a><br>前几天我们陆陆续续的讲了Python如何生成词云以及Selenium的安装使用，今天我们综合一下这些知识，写一篇爬虫实战文章，带大家爬取QQ空间好友说说写人本地txt文件，并生成词云。<br>大家一定很感兴趣吧？下面开始正题。</p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>1.确认访问的URL<br>2.模拟登录你的QQ号<br>3.判断好友空间是否加了权限，切换到说说的frame，爬取当前页面数据，下拉滚动条，翻页继续获取   爬取的内容写入本地TXT文件中<br>4.爬取到最后一页，读取TXT文件从而生成词云</p>
+<h3 id="具体分析"><a href="#具体分析" class="headerlink" title="具体分析"></a>具体分析</h3><p>1.确认访问的URL<br>这就很简单了，我们通过观察发现，QQ空间好友的URL：<br><a href="https://user.qzone.qq.com/{好友QQ号}/311" target="_blank" rel="external">https://user.qzone.qq.com/{好友QQ号}/311</a></p>
+<p>2.我们在请求的时候会遇到模拟登录，也就是要通过Selenium+浏览器登录你的QQ号后才能访问你好友的QQ空间<br>下面是模拟登录的代码：<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">file</span> = <span class="string">'C:/Users/Administrator/Desktop/&#123;&#125;.txt'</span>.<span class="built_in">format</span>(qq)</div><div class="line">    driver = webdriver.Firefox()</div><div class="line">    driver.maximize_window() <span class="comment">#窗口最大化</span></div><div class="line"></div><div class="line">    driver.<span class="built_in">get</span>(<span class="string">'https://user.qzone.qq.com/&#123;&#125;/311'</span>.<span class="built_in">format</span>(qq))  <span class="comment">#URL</span></div><div class="line">    driver.implicitly_wait(<span class="number">10</span>)  <span class="comment"># 隐示等待，为了等待充分加载好网址</span></div><div class="line">    driver.find_element_by_id(<span class="string">'login_div'</span>)</div><div class="line">    driver.switch_to_frame(<span class="string">'login_frame'</span>) <span class="comment">#切到输入账号密码的frame</span></div><div class="line">    driver.find_element_by_id(<span class="string">'switcher_plogin'</span>).click()<span class="comment">##点击‘账号密码登录’</span></div><div class="line">    driver.find_element_by_id(<span class="string">'u'</span>).<span class="built_in">clear</span>() <span class="comment">##清空账号栏</span></div><div class="line">    driver.find_element_by_id(<span class="string">'u'</span>).send_keys(<span class="string">'你的QQ账号'</span>)<span class="comment">#输入账号</span></div><div class="line">    driver.find_element_by_id(<span class="string">'p'</span>).<span class="built_in">clear</span>()<span class="comment">#清空密码栏</span></div><div class="line">    driver.find_element_by_id(<span class="string">'p'</span>).send_keys(<span class="string">'你的QQ密码'</span>)<span class="comment">#输入密码</span></div><div class="line">    driver.find_element_by_id(<span class="string">'login_button'</span>).click()<span class="comment">#点击‘登录’</span></div><div class="line">    driver.switch_to_default_content()   <span class="comment">#跳出当前的frame，这步很关键，不写会报错的，因为你登录后还要切刀另一个frame</span></div></pre></td></tr></table></figure></p>
+<p>需要强调是 <strong>driver.switch_to_default_content() </strong>，表示跳出当前的frame，这步很关键，因为你登录后还要切刀另一个frame。不写的话会出现下面的错误：<br><img src="https://upload-images.jianshu.io/upload_images/2787891-2f6045135daa934f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>3.第三部分我分几个点来说：<br>(1).判断空间是否加了权限<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>:</div><div class="line">    driver.find_element_by_id(<span class="string">'QM_OwnerInfo_Icon'</span>)<span class="comment">#判断是否QQ空间加了权限</span></div><div class="line">    b = <span class="keyword">True</span></div><div class="line"><span class="keyword">except</span>:</div><div class="line">    b = <span class="keyword">False</span></div></pre></td></tr></table></figure></p>
+<p>(2)切换到说说的frame，这个大家都会找吧<br><img src="https://upload-images.jianshu.io/upload_images/2787891-02e2641d3f0b1f67.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>(3)下拉滚动条<br>下拉滚动条是为了点击‘下一页’，下拉到可见视图。下拉滚动条要注意一点：<br>一定要对应它的frame，不要在爬取说说的frame下拉。<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#分4此下拉，确保能下拉到底部</span></div><div class="line">   <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">5</span>):</div><div class="line">                    driver.execute_script(<span class="string">"window.scrollBy(0,5000)"</span>)</div><div class="line">                    <span class="built_in">time</span>.sleep(<span class="number">2</span>)</div></pre></td></tr></table></figure></p>
+<p>(4).爬取说说数据，这就简单了吧？我用的xpath获取的说说的title，感兴趣的朋友可以把时间等数据一起获取</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attr">selector</span> = etree.HTML(driver.page_source)</div><div class="line"><span class="attr">title</span> = selector.xpath(<span class="string">'//li/div/div/pre/text()'</span>)</div></pre></td></tr></table></figure>
+<p>(5).翻页<br>直接点击‘下一页’即可。<br><figure class="highlight awk"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">driver.find_element_by_link_text(<span class="string">u'下一页'</span>).click()</div></pre></td></tr></table></figure></p>
+<p>(6).txt数据写入，不用多说，爬取到title了直接写入<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> title:</div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="built_in">file</span>):</div><div class="line">        print(<span class="string">'创建TXT成功'</span>)</div><div class="line"></div><div class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(<span class="built_in">file</span>, <span class="string">'a+'</span>) <span class="keyword">as</span> f:</div><div class="line">        f.<span class="built_in">write</span>(i + <span class="string">'\n\n'</span>)</div><div class="line">        f.<span class="built_in">close</span>()</div></pre></td></tr></table></figure></p>
+<p>4.生成词云，这只是普通的模式，想具体了解可以看我以前文章或者Google<br><figure class="highlight tcl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">def get_wordcloud(<span class="keyword">file</span>):</div><div class="line"></div><div class="line"></div><div class="line">    f = <span class="keyword">open</span>(<span class="keyword">file</span>, <span class="string">'r'</span>, <span class="keyword">encoding</span>=<span class="string">'gbk'</span>).<span class="keyword">read</span>()</div><div class="line"></div><div class="line"><span class="comment">    # 结巴分词，生成字符串，wordcloud无法直接生成正确的中文词云</span></div><div class="line">    cut_text = <span class="string">" "</span>.<span class="keyword">join</span>(jieba.cut(f))</div><div class="line"></div><div class="line">    wordcloud = WordCloud(</div><div class="line"><span class="comment">        # 设置字体，不然会出现口字乱码，文字的路径是电脑的字体一般路径，可以换成别的</span></div><div class="line">        font_path=<span class="string">"C:/Windows/Fonts/simfang.ttf"</span>,</div><div class="line"><span class="comment">        # 设置了背景，宽高</span></div><div class="line">        background_color=<span class="string">"white"</span>, width=<span class="number">2000</span>, height=<span class="number">1380</span>).generate(cut_text)</div><div class="line"></div><div class="line">    plt.imshow(wordcloud, interpolation=<span class="string">"bilinear"</span>)</div><div class="line">    plt.axis(<span class="string">"off"</span>)</div><div class="line">    plt.show()</div></pre></td></tr></table></figure></p>
+<p>由于时间问题，此篇文章只支持输入一个好友的QQ号，你要是想爬取你的所有的QQ好友的说说，可以现在QQ邮箱获取你所有好友的QQ号，然后生成一个数组，依次获取就可以了。</p>
+<h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coding=utf-8</span></div><div class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</div><div class="line"><span class="keyword">import</span>  os</div><div class="line"><span class="keyword">from</span>  lxml <span class="keyword">import</span>  etree</div><div class="line"><span class="keyword">import</span> time</div><div class="line"><span class="keyword">from</span> wordcloud <span class="keyword">import</span> WordCloud</div><div class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt  <span class="comment"># 绘制图像的模块</span></div><div class="line"><span class="keyword">import</span> jieba  <span class="comment"># jieba分词</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_wordcloud</span><span class="params">(file)</span>:</span></div><div class="line"></div><div class="line"></div><div class="line">    f = open(file, <span class="string">'r'</span>, encoding=<span class="string">'gbk'</span>).read()</div><div class="line"></div><div class="line">    <span class="comment"># 结巴分词，生成字符串，wordcloud无法直接生成正确的中文词云</span></div><div class="line">    cut_text = <span class="string">" "</span>.join(jieba.cut(f))</div><div class="line"></div><div class="line">    wordcloud = WordCloud(</div><div class="line">        <span class="comment"># 设置字体，不然会出现口字乱码，文字的路径是电脑的字体一般路径，可以换成别的</span></div><div class="line">        font_path=<span class="string">"C:/Windows/Fonts/simfang.ttf"</span>,</div><div class="line">        <span class="comment"># 设置了背景，宽高</span></div><div class="line">        background_color=<span class="string">"white"</span>, width=<span class="number">2000</span>, height=<span class="number">1380</span>).generate(cut_text)</div><div class="line"></div><div class="line">    plt.imshow(wordcloud, interpolation=<span class="string">"bilinear"</span>)</div><div class="line">    plt.axis(<span class="string">"off"</span>)</div><div class="line">    plt.show()</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_qzone</span><span class="params">(qq)</span>:</span></div><div class="line"></div><div class="line">    file = <span class="string">'C:/Users/qzs/Desktop/&#123;&#125;.txt'</span>.format(qq)</div><div class="line">    driver = webdriver.Firefox()</div><div class="line">    driver.maximize_window() <span class="comment">#窗口最大化</span></div><div class="line"></div><div class="line">    driver.get(<span class="string">'https://user.qzone.qq.com/&#123;&#125;/311'</span>.format(qq))  <span class="comment">#URL</span></div><div class="line">    driver.implicitly_wait(<span class="number">10</span>)  <span class="comment"># 隐示等待，为了等待充分加载好网址</span></div><div class="line">    driver.find_element_by_id(<span class="string">'login_div'</span>)</div><div class="line">    driver.switch_to_frame(<span class="string">'login_frame'</span>) <span class="comment">#切到输入账号密码的frame</span></div><div class="line">    driver.find_element_by_id(<span class="string">'switcher_plogin'</span>).click()<span class="comment">##点击‘账号密码登录’</span></div><div class="line">    driver.find_element_by_id(<span class="string">'u'</span>).clear() <span class="comment">##清空账号栏</span></div><div class="line">    driver.find_element_by_id(<span class="string">'u'</span>).send_keys(<span class="string">'你的QQ账号'</span>)<span class="comment">#输入账号</span></div><div class="line">    driver.find_element_by_id(<span class="string">'p'</span>).clear()<span class="comment">#清空密码栏</span></div><div class="line">    driver.find_element_by_id(<span class="string">'p'</span>).send_keys(<span class="string">'你的QQ密码'</span>)<span class="comment">#输入密码</span></div><div class="line">    driver.find_element_by_id(<span class="string">'login_button'</span>).click()<span class="comment">#点击‘登录’</span></div><div class="line">    driver.switch_to_default_content()   <span class="comment">#跳出当前的frame，这步很关键，不写会报错的，因为你登录后还要切刀另一个frame</span></div><div class="line"></div><div class="line"></div><div class="line">    driver.implicitly_wait(<span class="number">10</span>)</div><div class="line">    time.sleep(<span class="number">3</span>)</div><div class="line"></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        driver.find_element_by_id(<span class="string">'QM_OwnerInfo_Icon'</span>)<span class="comment">#判断是否QQ空间加了权限</span></div><div class="line">        b = <span class="keyword">True</span></div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        b = <span class="keyword">False</span></div><div class="line"></div><div class="line">    <span class="keyword">if</span> b==<span class="keyword">True</span>:</div><div class="line">        page = <span class="number">1</span>;</div><div class="line"></div><div class="line">        <span class="keyword">try</span>:</div><div class="line">            <span class="keyword">while</span> page:</div><div class="line">                <span class="comment">##下拉</span></div><div class="line">                <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">5</span>):</div><div class="line">                    driver.execute_script(<span class="string">"window.scrollBy(0,5000)"</span>)</div><div class="line">                    time.sleep(<span class="number">2</span>)</div><div class="line"></div><div class="line">                driver.switch_to_frame(<span class="string">'app_canvas_frame'</span>)<span class="comment">#切入说说frame</span></div><div class="line">                selector = etree.HTML(driver.page_source)</div><div class="line">                title = selector.xpath(<span class="string">'//li/div/div/pre/text()'</span>) <span class="comment">##获取title集合</span></div><div class="line">                print(title)</div><div class="line">                </div><div class="line">                <span class="keyword">for</span> i <span class="keyword">in</span> title:</div><div class="line">                    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(file):</div><div class="line">                        print(<span class="string">'创建TXT成功'</span>)</div><div class="line"></div><div class="line">                    <span class="keyword">with</span> open(file, <span class="string">'a+'</span>) <span class="keyword">as</span> f:</div><div class="line">                        f.write(i + <span class="string">'\n\n'</span>)</div><div class="line">                        f.close()</div><div class="line">                        </div><div class="line">                page = page + <span class="number">1</span></div><div class="line">                driver.find_element_by_link_text(<span class="string">u'下一页'</span>).click()  <span class="comment">#点击下一页</span></div><div class="line">                driver.switch_to.default_content()    <span class="comment">#跳出当前frame</span></div><div class="line">                time.sleep(<span class="number">3</span>)</div><div class="line">            driver.quit()</div><div class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</div><div class="line">            <span class="comment">#我没有判断什么时候为最后一页，当爬取到最后一页，</span></div><div class="line">            <span class="comment"># 默认点击下一页，会出现异常，我直接在这认为它是爬到末尾了，还是有待优化</span></div><div class="line">            print(<span class="string">"爬取完成，爬到的最后页数为"</span> + str(page - <span class="number">1</span>))</div><div class="line">            get_wordcloud(file)</div><div class="line">            driver.quit()</div><div class="line">            driver.close()</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line"></div><div class="line">    get_qzone(<span class="string">'要爬取的QQ空间好友的QQ号'</span>)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/erweima.jpg" alt="秦子帅 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎您扫一扫上面的微信公众号，带你走进Android、Python技术！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="秦子帅 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/爬虫实战/" rel="tag"># 爬虫实战</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/31/今天，我创建了知识星球/" rel="next" title="今天，我创建了知识星球">
+                <i class="fa fa-chevron-left"></i> 今天，我创建了知识星球
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/29/Android事件分发机制介绍/" rel="prev" title="Android事件分发机制介绍">
+                Android事件分发机制介绍 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="vcomments"></div>
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/aaa.jpg"
+                alt="秦子帅" />
+            
+              <p class="site-author-name" itemprop="name">秦子帅</p>
+              <p class="site-description motion-element" itemprop="description">欢迎关注我的微信公众号「秦子帅」</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/javaexception" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.toutiao.com/c/user/51132986923/#mid=1578969957916685" target="_blank" title="今日头条">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>今日头条</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/2a55d6e39135" target="_blank" title="简书">
+                    
+                      <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://blog.csdn.net/qq_34908107" target="_blank" title="CSDN">
+                    
+                      <i class="fa fa-fw fa-crosshairs"></i>CSDN</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/57af46988ac247005f05846a" target="_blank" title="掘金">
+                    
+                      <i class="fa fa-fw fa-spinner"></i>掘金</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">2.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体分析"><span class="nav-number">3.</span> <span class="nav-text">具体分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源码"><span class="nav-number">4.</span> <span class="nav-text">源码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017-2018 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">秦子帅</span>
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.7-rc3/dist/Valine.min.js"></script>
+  <script type="text/javascript">
+    new Valine({
+        av: AV,
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        app_id: 'HOWDrN7uDVaroNbXnUsm6OsQ-gzGzoHsz',
+        app_key: 'MVEsuywlj4aATAK8E7d1EFjY',
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊! ！'
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("HOWDrN7uDVaroNbXnUsm6OsQ-gzGzoHsz", "MVEsuywlj4aATAK8E7d1EFjY");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+<!-- С���� -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="爬虫实战," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="#前言 先看爬到的信息：  今天主要用到了两个库：Requests和BeautifulSoup。所以我先简单的说一下这两个库的用法，提到的都是此文需要用到的。">
+<meta name="keywords" content="爬虫实战">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python爬虫实战(1)-爬取“房天下”租房信息(超详细)">
+<meta property="og:url" content="http://wanqinlong.com/2018/03/17/Python爬虫实战(1)-爬取“房天下”租房信息(超详细)/index.html">
+<meta property="og:site_name" content="秦子帅的博客">
+<meta property="og:description" content="#前言 先看爬到的信息：  今天主要用到了两个库：Requests和BeautifulSoup。所以我先简单的说一下这两个库的用法，提到的都是此文需要用到的。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-ce215370011db415?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-92ccab964557f74f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-9099206150698f73?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-710aa6e9e9b9d9e2?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-736240235207907c?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-86e2911719e9161a?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-f9439141ed3a6121?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-3c1926d4078e2625?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-1b9a8d5b24713293?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2787891-7fcbc43ccc000625?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-05-31T13:06:59.905Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Python爬虫实战(1)-爬取“房天下”租房信息(超详细)">
+<meta name="twitter:description" content="#前言 先看爬到的信息：  今天主要用到了两个库：Requests和BeautifulSoup。所以我先简单的说一下这两个库的用法，提到的都是此文需要用到的。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2787891-ce215370011db415?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.3',
+    sidebar: {"position":"right","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wanqinlong.com/2018/03/17/Python爬虫实战(1)-爬取“房天下”租房信息(超详细)/"/>
+
+
+
+
+
+  <title>Python爬虫实战(1)-爬取“房天下”租房信息(超详细) | 秦子帅的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">秦子帅的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Android Developer | 一直在路上，为梦想奋斗！</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home  ��ҳ"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user ����"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://wanqinlong.com/2018/03/17/Python爬虫实战(1)-爬取“房天下”租房信息(超详细)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="秦子帅">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/aaa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="秦子帅的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Python爬虫实战(1)-爬取“房天下”租房信息(超详细)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-17T14:18:41+08:00">
+                2018-03-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python爬虫实战/" itemprop="url" rel="index">
+                    <span itemprop="name">Python爬虫实战</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/03/17/Python爬虫实战(1)-爬取“房天下”租房信息(超详细)/" class="leancloud_visitors" data-flag-title="Python爬虫实战(1)-爬取“房天下”租房信息(超详细)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <hr>
+<p>#<strong>前言</strong></p>
+<p>先看爬到的信息：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-ce215370011db415?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<p>今天主要用到了两个库：<strong>Requests</strong>和<strong>BeautifulSoup</strong>。所以我先简单的说一下这两个库的用法，提到的都是此文需要用到的。<br><a id="more"></a></p>
+<hr>
+<p>#<strong>Requests</strong></p>
+<p>requests是一个很实用的Python HTTP客户端库。</p>
+<p>下面通过一个例子来了解一下：</p>
+<p>网址就用房天下的天津整租租房信息“<a href="http://zu.tj.fang.com/house/n31/”" target="_blank" rel="external">http://zu.tj.fang.com/house/n31/”</a></p>
+<figure class="highlight roboconf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span>  requests</div><div class="line"><span class="comment">#请求头</span></div><div class="line">headers = &#123;</div><div class="line">           '<span class="attribute">User-Agent'</span>: 'Mozilla/5.0 (Windows NT 10.0; <span class="attribute">WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36',</span></div><div class="line"><span class="attribute">           &#125;</span></div><div class="line"><span class="attribute">#Get请求-并传递headers</span></div><div class="line"><span class="attribute">data=requests.get("http</span>://zu<span class="variable">.tj</span><span class="variable">.fang</span><span class="variable">.com</span>/house/n31/",headers=headers)</div><div class="line"></div><div class="line">print(data<span class="variable">.text</span>)</div></pre></td></tr></table></figure>
+<p>如果正常的话打印出来的就是如下，这里只截取一部分：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-92ccab964557f74f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>requests请求也会出现异常，这里我就先不细说了，可以去此网址查下具体用法：</p>
+<p><a href="http://docs.python-requests.org/zh_CN/latest/user/quickstart.html" target="_blank" rel="external">http://docs.python-requests.org/zh_CN/latest/user/quickstart.html</a></p>
+<p>另外上面的代码中的headers是如何来的呢？这里给大家讲一下：</p>
+<p>请求头的添加方法：</p>
+<p><strong>1.</strong>打开你要爬取的网址，在空白处右键–&gt;检查，然后点击Network</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-9099206150698f73?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<hr>
+<p>#<strong>BeautifulSoup</strong></p>
+<p>Beautiful Soup 是用Python写的一个HTML/XML的解析器，它可以很好的处理不规范标记并生成剖析树(parse tree)。 它提供简单又常用的导航(navigating)，搜索以及修改剖析树的操作。它可以大大节省你的编程时间。</p>
+<p>安装Beautiful Soup时注意一个问题， 我的python是3.6版本，安装的是bs4</p>
+<figure class="highlight roboconf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">import</span>  requests</div><div class="line"><span class="keyword">import</span>  bs4</div><div class="line"><span class="comment">#请求头</span></div><div class="line">headers = &#123;</div><div class="line">           '<span class="attribute">User-Agent'</span>: 'Mozilla/5.0 (Windows NT 10.0; <span class="attribute">WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36',</span></div><div class="line"><span class="attribute">           &#125;</span></div><div class="line"><span class="attribute">#Get请求-并传递headers</span></div><div class="line"><span class="attribute">data=requests.get("http</span>://zu<span class="variable">.tj</span><span class="variable">.fang</span><span class="variable">.com</span>/house/n31/",headers=headers)</div><div class="line">soup=bs4<span class="variable">.BeautifulSoup</span>(data<span class="variable">.text</span>,"html<span class="variable">.parser</span>")</div><div class="line">print(soup<span class="variable">.prettify</span>())</div></pre></td></tr></table></figure>
+<p>输出的是soup文档，结果如下(截取了一部分)：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-710aa6e9e9b9d9e2?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<p>这里主要讲一下Beautiful Soup中的<strong>select()</strong>方法， 通过某个属性查找，而属性可以在网页中复制到。</p>
+<p>具体的可以直接此网址学：</p>
+<p><a href="http://beautifulsoup.readthedocs.io/zh_CN/latest/" target="_blank" rel="external">http://beautifulsoup.readthedocs.io/zh_CN/latest/</a></p>
+<p>复制的步骤：</p>
+<p><strong>1.</strong>选中你要了解的内容，右键–&gt;检查，比如我对价格进行了“检查”：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-736240235207907c?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<p><strong>2.</strong>选择copy selector</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-86e2911719e9161a?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<p><strong>3.</strong>复制的放到select方法内，代码如下：</p>
+<figure class="highlight roboconf"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">headers = &#123;</div><div class="line">           '<span class="attribute">User-Agent'</span>: 'Mozilla/5.0 (Windows NT 10.0; <span class="attribute">WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36',</span></div><div class="line"><span class="attribute">           &#125;</span></div><div class="line"><span class="attribute"></span></div><div class="line"><span class="attribute">data=requests.get("http</span>://zu<span class="variable">.tj</span><span class="variable">.fang</span><span class="variable">.com</span>/house/n31/",headers=headers)</div><div class="line">soup=bs4<span class="variable">.BeautifulSoup</span>(data<span class="variable">.text</span>,"html<span class="variable">.parser</span>")</div><div class="line"></div><div class="line">concretedata=soup<span class="variable">.select</span>("#listBox &gt; div<span class="variable">.houseList</span> &gt; dl:nth-of-type(1) &gt; dd &gt; div<span class="variable">.moreInfo</span> &gt; p &gt; span")</div><div class="line"></div><div class="line">for houseinformat in  concretedata:</div><div class="line">    print(houseinformat<span class="variable">.get_text</span>())</div></pre></td></tr></table></figure>
+<p>输出的肯定是我们选中的价格</p>
+<p>注意的是复制的内容里有dl:nth-child(1)，直接改成dl:nth-of-type(1)要不会报错的。另外里面的get_text()方法表示直接获取了文字信息，不然会和标签一起显示的。</p>
+<p><strong>强调：</strong>如果要想获取此列表的所有价格的话，直接观察一下会发现，去掉nth-of-type(1)就可以了，大家应该都明白的。也就是把select方法中的内容改为：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-f9439141ed3a6121?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>然后运行输出(只截取了一部分)：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-3c1926d4078e2625?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><strong>实战</strong></p>
+<p>根据上面的爬取方式，我们可以把当前网页“房天下天津整租租房信息”中的房屋标题，具体内容与价格爬取下来。</p>
+<p><strong>1.爬取标题</strong></p>
+<p>爬取标题我们再copy时发现用select方法不是和恰当了，这里应该能看出来吧？看不出来的可以自己去试一试，这里我们查看爬取下来SOUP文档，发现标题是在P标签下的”title”字段</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-1b9a8d5b24713293?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<p>所以我们可以直接用Beautiful Soup中的find_all()方法</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">#标题</span></div><div class="line"><span class="attr">title</span>=soup.find_all(<span class="string">"p"</span>,<span class="string">"title"</span>)</div></pre></td></tr></table></figure>
+<p><strong>2.爬取价格</strong></p>
+<p>这就不用多少了，上面讲过<br><figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">#价格</span></div><div class="line"><span class="attr">price</span>=soup.select(<span class="string">"#listBox &gt; div.houseList &gt; dl &gt; dd &gt; div.moreInfo &gt; p &gt; span"</span>)</div></pre></td></tr></table></figure></p>
+<p><strong>3.爬取具体内容</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">#具体的内容</span></div><div class="line"><span class="attr">concretedata</span>=soup.select(<span class="string">"#listBox &gt; div.houseList &gt; dl &gt; dd &gt; div.moreInfo &gt; p &gt; span"</span>)</div></pre></td></tr></table></figure>
+<p>整体代码如下：</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment"># -*- coding: gbk -*-</span></div><div class="line"><span class="built_in">import</span>  requests</div><div class="line"><span class="built_in">import</span>  bs4</div><div class="line"></div><div class="line">def get_lastdata():</div><div class="line">    <span class="attr">headers</span> = &#123;</div><div class="line">        'User-Agent': 'Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; WOW64) AppleWebKit/<span class="number">537.36</span> (KHTML, like Gecko) Chrome/<span class="number">64.0</span>.<span class="number">3282.140</span> Safari/<span class="number">537.36</span>',</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="attr">data</span> = requests.get(<span class="string">"http://zu.tj.fang.com/house/n31/"</span>, <span class="attr">headers=headers)</span></div><div class="line">    <span class="comment">#因为打印出来的格式有乱码，所以更改一下编码</span></div><div class="line">    data.<span class="attr">encoding="gbk"</span></div><div class="line">    <span class="attr">soup</span> = bs4.BeautifulSoup(data.text, <span class="string">"html.parser"</span>)</div><div class="line">    <span class="comment"># 标题</span></div><div class="line">    <span class="attr">title</span> = soup.find_all(<span class="string">"p"</span>, <span class="string">"title"</span>)</div><div class="line">    <span class="comment"># 价格</span></div><div class="line">    <span class="attr">price</span> = soup.select(<span class="string">"#listBox &gt; div.houseList &gt; dl &gt; dd &gt; div.moreInfo &gt; p &gt; span"</span>)</div><div class="line">    <span class="comment"># 具体的内容</span></div><div class="line">    <span class="attr">concretedata</span> = soup.select(<span class="string">"#listBox &gt; div.houseList &gt; dl &gt; dd &gt; p.font16.mt20.bold"</span>)</div><div class="line"></div><div class="line">    for title,price,concretedata <span class="keyword">in</span> zip(title,price,concretedata):</div><div class="line">        <span class="attr">last_data=&#123;</span></div><div class="line">            <span class="string">"title"</span>:title.get_text().strip(),</div><div class="line">            <span class="string">"concretedata"</span>:concretedata.get_text().strip(),</div><div class="line">            <span class="string">"price"</span>:price.get_text().strip()</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        print(   last_data)</div><div class="line"></div><div class="line"><span class="keyword">if</span> <span class="attr">__name__</span> == '__main__':</div><div class="line">    get_lastdata()</div></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2787891-7fcbc43ccc000625?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>希望对刚入门的朋友有所帮助！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/images/erweima.jpg" alt="秦子帅 wechat" style="width: 200px; max-width: 100%;"/>
+    <div>欢迎您扫一扫上面的微信公众号，带你走进Android、Python技术！</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="秦子帅 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/爬虫实战/" rel="tag"># 爬虫实战</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/02/25/设计模式(10)-装饰模式详解(易懂)/" rel="next" title="设计模式(10)-装饰模式详解(易懂)">
+                <i class="fa fa-chevron-left"></i> 设计模式(10)-装饰模式详解(易懂)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/24/设计模式(11)-策略模式详解(易懂)/" rel="prev" title="设计模式(11)-策略模式详解(易懂)">
+                设计模式(11)-策略模式详解(易懂) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="vcomments"></div>
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/aaa.jpg"
+                alt="秦子帅" />
+            
+              <p class="site-author-name" itemprop="name">秦子帅</p>
+              <p class="site-description motion-element" itemprop="description">欢迎关注我的微信公众号「秦子帅」</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/javaexception" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.toutiao.com/c/user/51132986923/#mid=1578969957916685" target="_blank" title="今日头条">
+                    
+                      <i class="fa fa-fw fa-envelope"></i>今日头条</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.jianshu.com/u/2a55d6e39135" target="_blank" title="简书">
+                    
+                      <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://blog.csdn.net/qq_34908107" target="_blank" title="CSDN">
+                    
+                      <i class="fa fa-fw fa-crosshairs"></i>CSDN</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://juejin.im/user/57af46988ac247005f05846a" target="_blank" title="掘金">
+                    
+                      <i class="fa fa-fw fa-spinner"></i>掘金</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017-2018 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">秦子帅</span>
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.7-rc3/dist/Valine.min.js"></script>
+  <script type="text/javascript">
+    new Valine({
+        av: AV,
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        app_id: 'HOWDrN7uDVaroNbXnUsm6OsQ-gzGzoHsz',
+        app_key: 'MVEsuywlj4aATAK8E7d1EFjY',
+        placeholder: 'ヾﾉ≧∀≦)o来啊，快活啊! ！'
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("HOWDrN7uDVaroNbXnUsm6OsQ-gzGzoHsz", "MVEsuywlj4aATAK8E7d1EFjY");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+
+<!-- С���� -->
+<script type="text/javascript" src="/js/src/love.js"></script>
+
+
+</body>
+</html>
